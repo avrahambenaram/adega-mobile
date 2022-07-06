@@ -3,6 +3,7 @@ import { View, FlatList, Animated, TextInput, Dimensions, Text } from 'react-nat
 import { RectButton } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
+import { useDispatch, useSelector } from 'react-redux';
 
 import styles from './styles';
 
@@ -14,11 +15,14 @@ import api from '../../services/api';
 
 function Products() {
 
+    const dispatch = useDispatch();
+    const products: Array<Product> = useSelector((store: any) => store.product);
+
     const navigation = useNavigation();
 
     const searchInputWidth = useRef(new Animated.Value(0)).current;
 
-    const [products, setProducts] = useState<Array<Product>>([]);
+    const [productsSearch, setProductsSearch] = useState<Array<Product>>([])
     const [productsPage, setProductsPage] = useState<number>(1);
     const [searchMode, setSearchMode] = useState<boolean>(false);
     const [search, setSearch] = useState<string>('');
@@ -26,7 +30,7 @@ function Products() {
     async function fetchProducts() {
         try {
             const { data: products } = await api.get('product');
-            setProducts(products);
+            dispatch({ type: 'set-products', value: products });
             setProductsPage(1);
         } catch(err) {
             alert('Um erro ocorreu ao carregar os produtos');
@@ -56,7 +60,7 @@ function Products() {
     async function handleSearch() {
         try {
             const { data: newProducts } = await api.get(`/product/search?q=${search}&page=${productsPage}`);
-            setProducts(newProducts)
+            setProductsSearch(newProducts);
         } catch(err) {
             alert(err);
         }
@@ -72,14 +76,17 @@ function Products() {
                 const { data: productsFetched } = await api.get(`product/search?q=${search}&page=${productsPage + 1}`);
                 if (productsFetched[0]) {
                     const newProducts = products.concat(productsFetched);
-                    setProducts(newProducts);
+                    setProductsSearch(newProducts);
                     setProductsPage(productsPage + 1);
                 }
             } else {
                 const { data: productsFetched } = await api.get(`product?page=${productsPage + 1}`);
                 if (productsFetched[0]) {
                     const newProducts = products.concat(productsFetched);
-                    setProducts(newProducts);
+                    dispatch({
+                        type: 'set-products',
+                        value: newProducts
+                    })
                     setProductsPage(productsPage + 1);
                 }
             }
@@ -90,9 +97,6 @@ function Products() {
 
     useEffect(() => {
         fetchProducts();
-        navigation.addListener('focus', () => {
-            fetchProducts();
-        })
     }, [])
 
     return <View style={styles.container}>
@@ -123,7 +127,17 @@ function Products() {
                 </RectButton>
             </View>
         </Header>
-        <FlatList
+        {searchMode ? <FlatList
+            style={styles.main}
+            contentContainerStyle={styles.mainContent}
+            data={productsSearch}
+            renderItem={({ item }) => <ProductCard {...item}/>}
+            keyExtractor={(_, index) => `${index}`}
+            onEndReached={handleMoreProducts}
+            onEndReachedThreshold={0.2}
+            numColumns={2}
+            columnWrapperStyle={{ marginTop: 10 }}
+        /> : <FlatList
             style={styles.main}
             contentContainerStyle={styles.mainContent}
             data={products}
@@ -133,7 +147,7 @@ function Products() {
             onEndReachedThreshold={0.2}
             numColumns={2}
             columnWrapperStyle={{ marginTop: 10 }}
-        />
+        />}
         <Footer>
             <RectButton onPress={handleUploadProduct}>
                 <Text style={styles.footerText}>Cadastrar produto</Text>

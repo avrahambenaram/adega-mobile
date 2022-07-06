@@ -1,4 +1,6 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
+
+const width = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
     container: {
@@ -19,7 +21,7 @@ const styles = StyleSheet.create({
 
     headerText: {
         fontFamily: 'Nunito400',
-        fontSize: 20,
+        fontSize: width * 0.05,
         color: '#FFF'
     },
 
@@ -37,7 +39,7 @@ const styles = StyleSheet.create({
 
     headerFilterText: {
         fontFamily: 'Nunito400',
-        fontSize: 13,
+        fontSize: width * 0.035,
         color: '#000',
         marginHorizontal: 10
     },

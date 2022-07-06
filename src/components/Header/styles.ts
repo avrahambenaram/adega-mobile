@@ -19,7 +19,13 @@ const styles = StyleSheet.create({
 
         justifyContent: 'center',
         alignItems: 'center'
-    }
+    },
+
+    text: {
+        fontFamily: 'Nunito400',
+        fontSize: Dimensions.get('screen').width * 0.05,
+        color: '#FFF'
+    },
 })
 
 export default styles;

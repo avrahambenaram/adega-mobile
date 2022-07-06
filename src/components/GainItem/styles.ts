@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
 
-    textProduct: {
+    textTemperature: {
         fontFamily: 'Nunito400',
         fontSize: width * 0.035,
         color: '#000'

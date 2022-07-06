@@ -130,10 +130,6 @@ function Entrance() {
             <Text style={styles.subtitle}>{treatDate()}</Text>
             <Text style={styles.h1}>Pagamento</Text>
             <View style={styles.table}>
-                <View style={styles.thead}>
-                    <Text style={styles.ttitle}>Forma</Text>
-                    <Text style={styles.ttitle}>Valor</Text>
-                </View>
                 <Text style={styles.finalValuePrice}>Resumo:</Text>
                 {entrance.items.map((product, index) => {
                     return <View key={product.id} style={styles.finalValue}>

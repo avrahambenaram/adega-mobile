@@ -1,8 +1,10 @@
 import { StyleSheet, Dimensions } from 'react-native';
 
+const width = Dimensions.get('window').width;
+
 const styles = StyleSheet.create({
     container: {
-        width: Dimensions.get('window').width * 0.4,
+        width: width * 0.4,
         height: 210,
         backgroundColor: '#FFF',
         marginHorizontal: 10,
@@ -45,14 +47,15 @@ const styles = StyleSheet.create({
     },
 
     infoName: {
+        width: '80%',
         fontFamily: 'Nunito400',
-        fontSize: 13,
+        fontSize: width * 0.035,
         color: '#000'
     },
 
     infoQuantity: {
         fontFamily: 'Nunito400',
-        fontSize: 13,
+        fontSize: width * 0.035,
         color: '#d39e00'
     },
 
@@ -73,7 +76,7 @@ const styles = StyleSheet.create({
 
     infoPrice: {
         fontFamily: 'Nunito400',
-        fontSize: 13.5,
+        fontSize: width * 0.035,
         color: '#FFF'
     }
 })

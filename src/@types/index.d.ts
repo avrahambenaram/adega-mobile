@@ -60,6 +60,15 @@ declare interface EntranceId {
     entranceMonth: number
     entranceYear: number
 }
+declare interface AwaitingSale {
+    client: string
+    id: number
+    products: Array<Product>
+    productsQuantity: {
+        [index: string]: number
+    }
+    payments: Array<Payment>
+}
 declare interface Sale {
     id: string
     products: Array<ProductSale>
@@ -99,4 +108,28 @@ declare interface SaleId {
     saleMonth: number
     saleYear: number
     items: Array<Product>
+}
+declare interface Gain {
+    id: string
+    cancelled: boolean
+    total: number
+    weekday: number
+    weekend: boolean
+    holiday: boolean
+    temperature: number
+    gainDate: string
+    gainTime: number
+    gainSecond: number
+    gainMinute: number
+    gainHour: number
+    gainDay: number
+    gainMonth: number
+    gainYear: number
+}
+declare interface Pix {
+    endToEndId: string
+    txid: string | number
+    valor: string | number
+    horario: string
+    infoPagador: string
 }

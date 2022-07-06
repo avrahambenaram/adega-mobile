@@ -1,4 +1,6 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions} from 'react-native';
+
+const width = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
     container: {
@@ -9,7 +11,7 @@ const styles = StyleSheet.create({
 
     headerTitle: {
         fontFamily: 'Nunito400',
-        fontSize: 18,
+        fontSize: width * 0.045,
         color: '#FFF',
 
         marginRight: 50
@@ -27,7 +29,7 @@ const styles = StyleSheet.create({
 
     productIconTitle: {
         fontFamily: 'Nunito400',
-        fontSize: 14,
+        fontSize: width * 0.035,
         color: '#000'
     },
 
@@ -71,7 +73,7 @@ const styles = StyleSheet.create({
 
     sectionTitle: {
         fontFamily: 'Nunito700',
-        fontSize: 20,
+        fontSize: width * 0.043,
         color: '#000',
 
         marginBottom: 15
@@ -96,7 +98,7 @@ const styles = StyleSheet.create({
 
     sectionItemInputTitle: {
         fontFamily: 'Nunito400',
-        fontSize: 16,
+        fontSize: width * 0.035,
         color: '#000'
     },
 
@@ -109,7 +111,7 @@ const styles = StyleSheet.create({
 
     sectionItemInputText: {
         fontFamily: 'Nunito400',
-        fontSize: 16,
+        fontSize: width * 0.035,
         color: '#007bff'
     },
 
@@ -119,7 +121,7 @@ const styles = StyleSheet.create({
         marginLeft: 5,
         height: 30,
         fontFamily: 'Nunito400',
-        fontSize: 16,
+        fontSize: width * 0.035,
         color: '#000'
     },
 
@@ -136,7 +138,7 @@ const styles = StyleSheet.create({
 
     uploadButtonText: {
         fontFamily: 'Nunito400',
-        fontSize: 22,
+        fontSize: width * 0.045,
         color: '#FFF'
     }
 })

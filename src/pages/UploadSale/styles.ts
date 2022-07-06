@@ -1,17 +1,12 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions} from 'react-native';
+
+const width = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
     container: {
         width: '100%',
         height: '100%',
         backgroundColor: '#F7F7F7'
-    },
-
-    headerText: {
-        fontFamily: 'Nunito400',
-        fontSize: 20,
-        color: '#FFF',
-        marginRight: 20
     },
 
     main: {
@@ -53,7 +48,7 @@ const styles = StyleSheet.create({
 
     sectionTitle: {
         fontFamily: 'Nunito400',
-        fontSize: 20,
+        fontSize: width * 0.04,
         color: '#000'
     },
 
@@ -92,6 +87,13 @@ const styles = StyleSheet.create({
     sectionProductInfoContainer: {
         width: '50%',
         flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center'
+    },
+
+    sectionProductInfoContainer2: {
+        width: '50%',
+        flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center'
     },
@@ -100,10 +102,17 @@ const styles = StyleSheet.create({
         width: 24,
         height: 24
     },
+    
+    sectionText: {
+        fontFamily: 'Nunito400',
+        fontSize: width * 0.035,
+        color: '#000'
+    },
 
     sectionProductName: {
+        width: '75%',
         fontFamily: 'Nunito400',
-        fontSize: 14,
+        fontSize: width * 0.035,
         color: '#000',
 
         marginLeft: 5
@@ -111,7 +120,7 @@ const styles = StyleSheet.create({
 
     sectionProductQuantity: {
         fontFamily: 'Nunito400',
-        fontSize: 16,
+        fontSize: width * 0.035,
         color: '#ffc107'
     },
 
@@ -166,8 +175,32 @@ const styles = StyleSheet.create({
 
     uploadButtonText: {
         fontFamily: 'Nunito400',
-        fontSize: 22,
+        fontSize: width * 0.05,
         color: '#FFF'
+    },
+
+    pixQrCode: {
+        width: width * 0.6,
+        height: width * 0.6
+    },
+
+    pixKeyContainer: {
+        marginTop: 10,
+        flexDirection: 'row'
+    },
+
+    pixTitle: {
+        fontSize: 16,
+        fontFamily: 'Nunito700',
+        color: '#000',
+        marginRight: 5
+    },
+
+    pixText: {
+        fontSize: 16,
+        fontFamily: 'Nunito400',
+        color: '#000',
+        marginLeft: 5
     }
 })
 

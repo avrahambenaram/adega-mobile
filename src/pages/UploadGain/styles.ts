@@ -67,7 +67,20 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
 
+    sectionRowDiv: {
+        width: '100%',
+
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+
+    sectionLabel: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+
     sectionInput: {
+        paddingHorizontal: 5,
         fontFamily: 'Nunito400',
         fontSize: width * 0.035,
         color: '#000',
@@ -76,38 +89,8 @@ const styles = StyleSheet.create({
         borderColor: 'lightgray',
         marginBottom: 6,
 
-        width: '100%',
+        width: '35%',
         height: 30
-    },
-
-    sectionProduct: {
-        width: '100%',
-        padding: 8,
-        marginVertical: 2,
-        borderWidth: 1,
-
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-    },
-
-    sectionProductInfoContainer: {
-        width: '50%',
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'center'
-    },
-
-    sectionProductInfoContainer2: {
-        width: '50%',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-    },
-
-    sectionProductImage: {
-        width: 24,
-        height: 24
     },
 
     sectionText: {

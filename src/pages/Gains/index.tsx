@@ -4,12 +4,12 @@ import { RectButton } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Feather } from '@expo/vector-icons';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import styles from './styles';
 
 import Header from '../../components/Header';
-import SaleItem from '../../components/SaleItem';
+import GainItem from '../../components/GainItem';
 import Footer from '../../components/Footer';
 
 import api from '../../services/api';
@@ -17,7 +17,7 @@ import api from '../../services/api';
 import verifyDate from './verifyDate';
 
 interface ApiData {
-    data: Array<Sale>
+    data: Array<Gain>
 }
 
 const date = new Date();
@@ -38,47 +38,50 @@ function treatDate(date: Date) {
     return `${treatTxtDt(day)}/${treatTxtDt(month)}/${year}`;
 }
 
-function Sales() {
-
-    const dispatch = useDispatch();
-    const sales: Array<Sale> = useSelector((store: any) => store.sale);
+function Gains() {
 
     const filterInputWidth = useRef(new Animated.Value(0)).current;
 
     const navigation = useNavigation();
 
+    const gains: Array<Gain> = useSelector((store: any) => store.gain);
+    const dispatch = useDispatch();
+
     const [filterMode, setFilterMode]  = useState<boolean>(false);
-    const [salesFilter, setSalesFilter] = useState<Array<Sale>>([]);
+    const [gainFilter, setGainsFilter] = useState<Array<Gain>>([]);
     const [filterDateFrom, setFilterDateFrom] = useState<Date>(new Date(date));
     const [filterDateFromMode, setFilterDateFromMode] = useState<boolean>(false);
     const [filterDateTo, setFilterDateTo] = useState<Date>(new Date(date));
     const [filterDateToMode, setFilterDateToMode] = useState<boolean>(false);
-    const [salesToday, setSalesToday] = useState<Array<Sale>>([]);
-    const [salesYesterday, setSalesYesterday] = useState<Array<Sale>>([]);
-    const [salesThisWeek, setSalesThisWeek] = useState<Array<Sale>>([]);
-    const [salesThisMonth, setSalesThisMonth] = useState<Array<Sale>>([]);
-    const [salesOld, setSalesOld] = useState<Array<Sale>>([]);
+    const [gainToday, setGainsToday] = useState<Array<Gain>>([]);
+    const [gainYesterday, setGainsYesterday] = useState<Array<Gain>>([]);
+    const [gainThisWeek, setGainsThisWeek] = useState<Array<Gain>>([]);
+    const [gainThisMonth, setGainsThisMonth] = useState<Array<Gain>>([]);
+    const [gainOld, setGainsOld] = useState<Array<Gain>>([]);
 
-    function setSales() {
-        const newSalesToday = sales.filter(sale => verifyDate.today(sale.saleDate));
-        const newSalesYesterday = sales.filter(sale => verifyDate.yesterday(sale.saleDate));
-        const newSalesThisWeek = sales.filter(sale => verifyDate.thisWeek(sale.saleDate));
-        const newSalesThisMonth = sales.filter(sale => verifyDate.thisMonth(sale.saleDate));
-        const newSalesOld = sales.filter(sale => verifyDate.old(sale.saleDate));
+    function setGains() {
+        const newGainsToday = gains.filter(gain => verifyDate.today(gain.gainDate));
+        const newGainsYesterday = gains.filter(gain => verifyDate.yesterday(gain.gainDate));
+        const newGainsThisWeek = gains.filter(gain => verifyDate.thisWeek(gain.gainDate));
+        const newGainsThisMonth = gains.filter(gain => verifyDate.thisMonth(gain.gainDate));
+        const newGainsOld = gains.filter(gain => verifyDate.old(gain.gainDate));
 
-        setSalesToday(newSalesToday);
-        setSalesYesterday(newSalesYesterday);
-        setSalesThisWeek(newSalesThisWeek);
-        setSalesThisMonth(newSalesThisMonth);
-        setSalesOld(newSalesOld);
+        setGainsToday(newGainsToday);
+        setGainsYesterday(newGainsYesterday);
+        setGainsThisWeek(newGainsThisWeek);
+        setGainsThisMonth(newGainsThisMonth);
+        setGainsOld(newGainsOld);
     }
-    async function fetchSales() {
+    async function fetchGains() {
         try {
-            const { data: sales } = await api.get('sale') as ApiData;
+            const { data: gains } = await api.get('gain') as ApiData;
 
-            dispatch({ type: 'set-sales', value: sales })
+            dispatch({
+                type: 'set-gains',
+                value: gains
+            })
         } catch(err) {
-            alert('Erro ao carregar as vendas');
+            alert('Erro ao carregar os ganhos');
         }
     }
 
@@ -129,27 +132,27 @@ function Sales() {
         setFilterDateToMode(true);
     }
 
-    function handleUploadSale() {
-        navigation.navigate('upload-sale');
+    function handleUploadGain() {
+        navigation.navigate('upload-gain');
     }
 
     useEffect(() => {
-        fetchSales();
+        fetchGains();
     }, [])
     useEffect(() => {
-        setSales();
-    }, [sales])
+        setGains();
+    }, [gains])
 
     useEffect(() => {
         async function run() {
             try {
                 const from = filterDateFrom.getTime();
                 const to = filterDateTo.getTime();
-                const { data: sales } = await api.get(`sale?timeFrom=${from}&timeTo=${to}`) as ApiData;
+                const { data: gains } = await api.get(`gain?timeFrom=${from}&timeTo=${to}`) as ApiData;
 
-                setSalesFilter(sales);
+                setGainsFilter(gains);
             } catch(err) {
-                alert('Erro ao carregar as vendas do filtro');
+                alert('Erro ao carregar as ganhos do filtro');
             }
         }
         run()
@@ -158,7 +161,7 @@ function Sales() {
     return <View style={styles.container}>
         <Header>
             <View style={styles.headerContainer}>
-                {!filterMode ? <Text style={styles.headerText}>Vendas</Text> : null}
+                {!filterMode ? <Text style={styles.headerText}>Ganhos</Text> : null}
                 <Animated.View
                     style={[
                         styles.headerFilterContainer,
@@ -199,38 +202,38 @@ function Sales() {
         <ScrollView style={styles.main} contentContainerStyle={styles.mainContent}>
             {filterMode ? <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Filtro</Text>
-                {salesFilter.map(sale => <SaleItem key={sale.id} sale={sale} />)}
-                {!salesFilter[0] ? <View style={styles.sectionSubtitleContainer}>
-                    <Text style={styles.sectionSubtitle}>Não foi possível encontrar suas vendas</Text>
+                {gainFilter.map(gain => <GainItem key={gain.id} gain={gain} />)}
+                {!gainFilter[0] ? <View style={styles.sectionSubtitleContainer}>
+                    <Text style={styles.sectionSubtitle}>Não foi possível encontrar seus ganhos</Text>
                 </View> : null}
             </View> : null}
-            {salesToday[0] ? <View style={styles.section}>
+            {gainToday[0] ? <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Hoje</Text>
-                {salesToday.map(sale => <SaleItem key={sale.id} sale={sale} />)}
+                {gainToday.map(gain => <GainItem key={gain.id} gain={gain} />)}
             </View> : null}
-            {salesYesterday[0] ? <View style={styles.section}>
+            {gainYesterday[0] ? <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Ontem</Text>
-                {salesYesterday.map(sale => <SaleItem key={sale.id} sale={sale} />)}
+                {gainYesterday.map(gain => <GainItem key={gain.id} gain={gain} />)}
             </View> : null}
-            {salesThisWeek[0] ? <View style={styles.section}>
+            {gainThisWeek[0] ? <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Essa semana</Text>
-                {salesThisWeek.map(sale => <SaleItem key={sale.id} sale={sale} />)}
+                {gainThisWeek.map(gain => <GainItem key={gain.id} gain={gain} />)}
             </View> : null}
-            {salesThisMonth[0] ? <View style={styles.section}>
+            {gainThisMonth[0] ? <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Esse mês</Text>
-                {salesThisMonth.map(sale => <SaleItem key={sale.id} sale={sale} />)}
+                {gainThisMonth.map(gain => <GainItem key={gain.id} gain={gain} />)}
             </View> : null}
-            {salesOld[0] ? <View style={styles.section}>
+            {gainOld[0] ? <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Antigo</Text>
-                {salesOld.map(sale => <SaleItem key={sale.id} sale={sale} />)}
+                {gainOld.map(gain => <GainItem key={gain.id} gain={gain} />)}
             </View> : null}
         </ScrollView>
         <Footer>
-            <RectButton onPress={handleUploadSale}>
-                <Text style={styles.headerText}>Cadastrar venda</Text>
+            <RectButton onPress={handleUploadGain}>
+                <Text style={styles.headerText}>Cadastrar ganho</Text>
             </RectButton>
         </Footer>
     </View>
 }
 
-export default Sales;
+export default Gains;

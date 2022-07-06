@@ -21,7 +21,6 @@ function UploadEntrance() {
     const [productsQuantity, setProductsQuantity] = useState<ProductsQuantity>({});
     const [productSearch, setProductSearch] = useState<string>('');
     const [productsSearch, setProductsSearch] = useState<Array<Product>>([]);
-    const [payments, setPayments] = useState<Array<Payment>>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
     function reset() {
@@ -29,7 +28,6 @@ function UploadEntrance() {
         setProductsQuantity({});
         setProductsSearch([]);
         setProductSearch('');
-        setPayments([]);
     }
 
     function calculateTotalValue(): number {
@@ -114,39 +112,6 @@ function UploadEntrance() {
         setProductsSearch([]);
     }
 
-    function handleAddPayment() {
-        const newPayments = [...payments];
-        newPayments.push({
-            pay: 0,
-            paymentType: 'money'
-        })
-        setPayments(newPayments)
-    }
-
-    function handleChangePay(index: number, txt: string) {
-        const newPayments = [...payments];
-        if (txt === '') {
-            newPayments[index].pay = 0;
-        } else {
-            let newText = txt.replace('.', '');
-            let pay = parseFloat((parseFloat(newText) / 100).toFixed(2));
-            newPayments[index].pay = pay;
-        }
-        setPayments(newPayments);
-    }    
-
-    function handleChangePayType(index: number, type: string) {
-        const newPayments = [...payments];
-        newPayments[index].paymentType = type;
-        setPayments(newPayments);
-    }
-
-    function handleRemovePayment(index: number) {
-        const newPayments = [...payments];
-        newPayments.splice(index, 1);
-        setPayments(newPayments);
-    }
-
     async function handleUploadEntrance() {
         setLoading(true);
         try {
@@ -183,9 +148,9 @@ function UploadEntrance() {
                 {products.length > 0 ? <View
                     style={[styles.sectionProduct, { borderColor: 'transparent' }]}
                 >
-                    <Text style={styles.sectionProductName}>Nome</Text>
-                    <Text style={styles.sectionProductName}>Qntd.</Text>
-                    <Text style={styles.sectionProductName}>Remover</Text>
+                    <Text style={styles.sectionText}>Nome</Text>
+                    <Text style={styles.sectionText}>Qntd.</Text>
+                    <Text style={styles.sectionText}>Remover</Text>
                 </View> : null}
                 {products.map(product => {
                     return <View
@@ -202,12 +167,7 @@ function UploadEntrance() {
                             />
                             <Text style={styles.sectionProductName}>{product.name}</Text>
                         </View>
-                        <View style={[
-                            styles.sectionProductInfoContainer,
-                            {
-                                width: '50%'
-                            }
-                            ]}>
+                        <View style={styles.sectionProductInfoContainer2}>
                             <TextInput
                                 style={styles.sectionProductName}
                                 placeholder="Qntd."
@@ -256,48 +216,9 @@ function UploadEntrance() {
             </View>
             <View style={styles.section}>
                 <View style={styles.sectionTitleContainer}>
-                    <Text style={styles.sectionTitle}>Formas de pagamento</Text>
-                    <RectButton onPress={handleAddPayment}>
-                        <Feather
-                            name="plus"
-                            size={20}
-                            color="#000"
-                        />
-                    </RectButton>
+                    <Text style={styles.sectionTitle}>Pagamento</Text>
                 </View>
                 <View style={styles.sectionHr}/>
-                {payments.map((payment, index) => {
-                    return <View key={index} style={styles.sectionFooter}>
-                        <View style={styles.sectionProductInfoContainer}>
-                            <Text style={styles.sectionFooterText}>Valor:</Text>
-                            <TextInput
-                                style={styles.sectionProductName}
-                                keyboardType="number-pad"
-                                placeholder="Valor a pagar"
-                                value={payment.pay.toFixed(2)}
-                                onChangeText={txt => handleChangePay(index, txt)}
-                            />
-                        </View>
-                        <Picker
-                            style={{ width: '40%' }}
-                            selectedValue={payment.paymentType}
-                            onValueChange={value => handleChangePayType(index, value)}
-                            mode="dropdown"
-                        >
-                            <Picker.Item label="Dinheiro" value="money" />
-                            <Picker.Item label="Crédito" value="credit" />
-                            <Picker.Item label="Débito" value="debt" />
-                        </Picker>
-                        <RectButton onPress={() => handleRemovePayment(index)}>
-                                <Feather
-                                    name="x"
-                                    size={20}
-                                    color="#dc3545"
-                                />
-                            </RectButton>
-                    </View>
-
-                })}
                 <Text style={styles.sectionFooterPrice}>Resumo:</Text>
                 {products.map(product => {
                     return <View key={product.id} style={styles.sectionFooter}>

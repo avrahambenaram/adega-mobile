@@ -47,13 +47,15 @@ function Sale() {
     function treatType(type: string) {
         switch (type) {
             case 'credit':
-                return 'Crédito'
+                return 'Crédito';
             case 'debt':
-                return 'Débito'
+                return 'Débito';
             case 'money':
-                return 'Dinheiro'
+                return 'Dinheiro';
+            case 'pix':
+                return 'PIX';
             default:
-                return 'Dinheiro'
+                return 'Dinheiro';
         }
     }
 

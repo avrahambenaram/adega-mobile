@@ -4,6 +4,7 @@ import { RectButton } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Feather } from '@expo/vector-icons';
+import { useSelector, useDispatch } from 'react-redux';
 
 import styles from './styles';
 
@@ -39,6 +40,9 @@ function treatDate(date: Date) {
 
 function Entrances() {
 
+    const dispatch = useDispatch();
+    const entrances: Array<Entrance> = useSelector((store: any) => store.entrance);
+
     const filterInputWidth = useRef(new Animated.Value(0)).current;
 
     const navigation = useNavigation();
@@ -55,21 +59,24 @@ function Entrances() {
     const [entranceThisMonth, setEntrancesThisMonth] = useState<Array<Entrance>>([]);
     const [entranceOld, setEntrancesOld] = useState<Array<Entrance>>([]);
 
+    function setEntrances() {
+        const newEntrancesToday = entrances.filter(entrance => verifyDate.today(entrance.entranceDate));
+        const newEntrancesYesterday = entrances.filter(entrance => verifyDate.yesterday(entrance.entranceDate));
+        const newEntrancesThisWeek = entrances.filter(entrance => verifyDate.thisWeek(entrance.entranceDate));
+        const newEntrancesThisMonth = entrances.filter(entrance => verifyDate.thisMonth(entrance.entranceDate));
+        const newEntrancesOld = entrances.filter(entrance => verifyDate.old(entrance.entranceDate));
+
+        setEntrancesToday(newEntrancesToday);
+        setEntrancesYesterday(newEntrancesYesterday);
+        setEntrancesThisWeek(newEntrancesThisWeek);
+        setEntrancesThisMonth(newEntrancesThisMonth);
+        setEntrancesOld(newEntrancesOld);
+    }
     async function fetchEntrances() {
         try {
             const { data: entrances } = await api.get('entrance') as ApiData;
 
-            const newEntrancesToday = entrances.filter(entrance => verifyDate.today(entrance.entranceDate));
-            const newEntrancesYesterday = entrances.filter(entrance => verifyDate.yesterday(entrance.entranceDate));
-            const newEntrancesThisWeek = entrances.filter(entrance => verifyDate.thisWeek(entrance.entranceDate));
-            const newEntrancesThisMonth = entrances.filter(entrance => verifyDate.thisMonth(entrance.entranceDate));
-            const newEntrancesOld = entrances.filter(entrance => verifyDate.old(entrance.entranceDate));
-
-            setEntrancesToday(newEntrancesToday);
-            setEntrancesYesterday(newEntrancesYesterday);
-            setEntrancesThisWeek(newEntrancesThisWeek);
-            setEntrancesThisMonth(newEntrancesThisMonth);
-            setEntrancesOld(newEntrancesOld);
+            dispatch({ type: 'set-entrances', value: entrances })
         } catch(err) {
             alert('Erro ao carregar as entradas');
         }
@@ -128,10 +135,10 @@ function Entrances() {
 
     useEffect(() => {
         fetchEntrances();
-        navigation.addListener('focus', () => {
-            fetchEntrances();
-        })
     }, [])
+    useEffect(() => {
+        setEntrances();
+    }, [entrances])
 
     useEffect(() => {
         async function run() {

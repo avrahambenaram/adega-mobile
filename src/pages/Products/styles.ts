@@ -1,4 +1,6 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
+
+const width = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
     container: {
@@ -32,7 +34,7 @@ const styles = StyleSheet.create({
         height: '90%',
 
         fontFamily: 'Nunito400',
-        fontSize: 16,
+        fontSize: width * 0.04,
         color: '#000'
     },
 
@@ -48,7 +50,7 @@ const styles = StyleSheet.create({
 
     footerText: {
         fontFamily: 'Nunito400',
-        fontSize: 20,
+        fontSize: width * 0.045,
         color: '#FFF'
     }
 })

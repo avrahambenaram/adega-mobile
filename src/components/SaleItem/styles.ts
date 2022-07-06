@@ -1,4 +1,6 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
+
+const width = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
     container: {
@@ -17,19 +19,19 @@ const styles = StyleSheet.create({
 
     textProduct: {
         fontFamily: 'Nunito400',
-        fontSize: 14,
+        fontSize: width * 0.035,
         color: '#000'
     },
 
     textDate: {
         fontFamily: 'Nunito400',
-        fontSize: 14,
+        fontSize: width * 0.035,
         color: '#ffc107'
     },
 
     textPrice: {
         fontFamily: 'Nunito400',
-        fontSize: 14,
+        fontSize: width * 0.035,
         color: '#28a745'
     }
 })

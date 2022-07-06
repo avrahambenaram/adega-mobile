@@ -1,4 +1,6 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
+
+const width = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
     container: {
@@ -9,7 +11,7 @@ const styles = StyleSheet.create({
 
     headerTitle: {
         fontFamily: 'Nunito400',
-        fontSize: 18,
+        fontSize: width * 0.045,
         color: '#FFF',
 
         marginRight: 50
@@ -27,13 +29,13 @@ const styles = StyleSheet.create({
 
     productIconTitle: {
         fontFamily: 'Nunito400',
-        fontSize: 14,
+        fontSize: width * 0.05,
         color: '#000'
     },
 
     productIconContainer: {
-        width: 150,
-        height: 150,
+        width: width * 0.4,
+        height: width * 0.4,
         backgroundColor: '#FFF',
 
         borderRadius: 10,
@@ -53,8 +55,9 @@ const styles = StyleSheet.create({
     },
 
     productIcon: {
-        width: 150,
-        height: 150
+        width: width * 0.4,
+        height: width * 0.4,
+        borderRadius: 10
     },
 
     productWithoutIcon: {
@@ -71,7 +74,7 @@ const styles = StyleSheet.create({
 
     sectionTitle: {
         fontFamily: 'Nunito700',
-        fontSize: 20,
+        fontSize: width * 0.05,
         color: '#000',
 
         marginBottom: 15
@@ -96,7 +99,7 @@ const styles = StyleSheet.create({
 
     sectionItemInputTitle: {
         fontFamily: 'Nunito400',
-        fontSize: 16,
+        fontSize: width * 0.04,
         color: '#000'
     },
 
@@ -109,7 +112,7 @@ const styles = StyleSheet.create({
 
     sectionItemInputText: {
         fontFamily: 'Nunito400',
-        fontSize: 16,
+        fontSize: width * 0.04,
         color: '#007bff'
     },
 

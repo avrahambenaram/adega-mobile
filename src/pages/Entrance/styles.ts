@@ -1,5 +1,7 @@
 import { StyleSheet, Dimensions } from 'react-native';
 
+const width = Dimensions.get('window').width;
+
 const styles = StyleSheet.create({
     container: {
         width: '100%',
@@ -9,7 +11,7 @@ const styles = StyleSheet.create({
 
     headerText: {
         fontFamily: 'Nunito400',
-        fontSize: 20,
+        fontSize: width * 0.05,
         color: '#FFF'
     },
 
@@ -20,7 +22,7 @@ const styles = StyleSheet.create({
 
     h1: {
         fontFamily: 'Nunito400',
-        fontSize: 24,
+        fontSize: width * 0.05,
         color: '#000',
         marginLeft: 20,
         marginTop: 10
@@ -47,16 +49,6 @@ const styles = StyleSheet.create({
     table: {
         width: '90%',
         marginLeft: Dimensions.get('window').width * 0.05
-    },
-
-    thead: {
-        width: '100%',
-        borderBottomWidth: 1,
-        borderBottomColor: '#000',
-
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center'
     },
 
     tr: {
@@ -121,7 +113,7 @@ const styles = StyleSheet.create({
 
     footerText: {
         fontFamily: 'Nunito400',
-        fontSize: 24,
+        fontSize: width * 0.045,
         color: '#FFF'
     }
 })

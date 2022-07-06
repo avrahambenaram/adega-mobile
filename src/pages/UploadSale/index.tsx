@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, Image, TextInput, TouchableOpacity as TO, ActivityIndicator, Alert } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { Feather } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
+import { useRoute } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
 
 import styles from './styles';
 
@@ -17,6 +19,13 @@ interface ProductsQuantity {
 
 function UploadSale() {
 
+    const dispatch = useDispatch();
+
+    const route = useRoute();
+
+    const [awaitingSaleId, setAwaitingSaleId] = useState(0);
+
+    const [clientName, setClientName] = useState('');
     const [products, setProducts] = useState<Array<Product>>([]);
     const [productsQuantity, setProductsQuantity] = useState<ProductsQuantity>({});
     const [productSearch, setProductSearch] = useState<string>('');
@@ -24,12 +33,24 @@ function UploadSale() {
     const [payments, setPayments] = useState<Array<Payment>>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
+    const [qrcodeImage, setQrcodeImage] = useState('');
+
     function reset() {
         setProducts([]);
         setProductsQuantity({});
         setProductsSearch([]);
         setProductSearch('');
         setPayments([]);
+    }
+
+    function buildSale(): AwaitingSale {
+        return {
+            products,
+            productsQuantity,
+            payments,
+            id: Date.now(),
+            client: clientName
+        }
     }
 
     function calculateTotalValue(): number {
@@ -63,6 +84,10 @@ function UploadSale() {
             payValue += payment.pay;
         })
         return calculateTotalValue() - payValue;
+    }
+
+    function handleChangeClientName(txt: string) {
+        setClientName(txt);
     }
 
     async function handleChangeSearch(txt: string) {
@@ -181,6 +206,11 @@ function UploadSale() {
                 payment: payments,
                 price: calculateTotalValue()
             })
+            dispatch({
+                type: 'remove-awaiting-sale',
+                id: awaitingSaleId
+            })
+
             alert('Venda cadastrada com sucesso');
             reset();
         } catch(err) {
@@ -189,20 +219,72 @@ function UploadSale() {
         setLoading(false);
     }
 
+    function checkPixPayment(): boolean {
+        let exists = false;
+        payments.forEach(payment => {
+            if (payment.paymentType === 'pix') {
+                exists = true;
+            }
+        })
+        return exists;
+    }
+
+    useEffect(() => {
+        if (route.params) {
+            const awaitingSale: AwaitingSale = (route as any).params.awaitingSale;
+            setClientName(awaitingSale.client);
+            setPayments(awaitingSale.payments);
+            setProducts(awaitingSale.products);
+            setProductsQuantity(awaitingSale.productsQuantity);
+            setAwaitingSaleId(awaitingSale.id);
+        }
+    }, [route.params])
+
+    useEffect(() => {
+        async function generateQrCode() {
+            try {
+                let value = 0;
+                payments.forEach(payment => {
+                    if (payment.paymentType === 'pix') {
+                        value += payment.pay;
+                    }
+                })
+                const { data } = await api.post('/pix/create', {
+                    value
+                })
+                setQrcodeImage(data.base64);
+            } catch(err) {
+                console.log(err)
+                alert('Erro ao gerar QR Code');
+            }
+        }
+        if (checkPixPayment()) {
+            generateQrCode();
+        }
+    }, [payments])
+
     return <View style={styles.container}>
-        <Header return>
-            <Text style={styles.headerText}>Cadastrar venda</Text>
-        </Header>
+        <Header uploadSale sale={buildSale()} awaitingSaleId={awaitingSaleId}/>
         <ScrollView style={styles.main} contentContainerStyle={styles.mainContent}>
+            <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Cliente</Text>
+                <View style={styles.sectionHr}/>
+                <TextInput
+                    placeholder="Digite o nome do cliente"
+                    style={styles.sectionInput}
+                    value={clientName}
+                    onChangeText={handleChangeClientName}
+                />
+            </View>
             <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Produtos</Text>
                 <View style={styles.sectionHr}/>
                 {products.length > 0 ? <View
                     style={[styles.sectionProduct, { borderColor: 'transparent' }]}
                 >
-                    <Text style={styles.sectionProductName}>Nome</Text>
-                    <Text style={styles.sectionProductName}>Qntd.</Text>
-                    <Text style={styles.sectionProductName}>Remover</Text>
+                    <Text style={styles.sectionText}>Nome</Text>
+                    <Text style={styles.sectionText}>Qntd.</Text>
+                    <Text style={styles.sectionText}>Remover</Text>
                 </View> : null}
                 {products.map(product => {
                     return <View
@@ -219,12 +301,7 @@ function UploadSale() {
                             />
                             <Text style={styles.sectionProductName}>{product.name}</Text>
                         </View>
-                        <View style={[
-                            styles.sectionProductInfoContainer,
-                            {
-                                width: '50%'
-                            }
-                            ]}>
+                        <View style={styles.sectionProductInfoContainer2}>
                             <TextInput
                                 style={styles.sectionProductName}
                                 placeholder="Qntd."
@@ -304,6 +381,7 @@ function UploadSale() {
                             <Picker.Item label="Dinheiro" value="money" />
                             <Picker.Item label="Crédito" value="credit" />
                             <Picker.Item label="Débito" value="debt" />
+                            <Picker.Item label="PIX" value="pix" />
                         </Picker>
                         <RectButton onPress={() => handleRemovePayment(index)}>
                                 <Feather
@@ -340,6 +418,16 @@ function UploadSale() {
                     <Text style={styles.uploadButtonText}>Cadastrar</Text>
                 </View>
             </TO>
+            {checkPixPayment() ? <>
+            <Image
+                style={styles.pixQrCode}
+                source={{ uri: qrcodeImage }}
+            />
+            <View style={styles.pixKeyContainer}>
+                <Text style={styles.pixTitle}>Ou utilize a chave pix CNPJ:</Text>
+                <Text style={styles.pixText}>46.763.941/0001-88</Text>
+            </View>
+            </> : null}
         </ScrollView>
     </View>
 }
