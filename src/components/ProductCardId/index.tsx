@@ -13,6 +13,7 @@ interface Props {
     image: string
     purchasePrice: number
     salePrice: number
+    quantity: number
     [index: string]: any
     sale?: boolean
     entrance?: boolean
@@ -35,6 +36,7 @@ function ProductCard(props: Props) {
             <View style={styles.infoContainer}>
                 <View style={styles.infoNameContainer}>
                     <Text style={styles.infoName}>{props.name}</Text>
+                    <Text style={styles.infoQuantity}>{props.quantity}x</Text>
                 </View>
                 <View style={styles.infoPricesContainer}>
                     {!props.sale ? <View style={[styles.infoPriceContainer, {backgroundColor: '#dc3545'}]}>

@@ -112,7 +112,7 @@ function UploadSale() {
         }
     }
 
-    function handleChangeQuantity(id: string, txt: string, max: number) {
+    function handleChangeQuantity(id: string, txt: string) {
         if (isNaN(txt as any)) {
             return;
         }
@@ -121,9 +121,6 @@ function UploadSale() {
             newProductsQuantity[id] = 0;
         } else {
             const newValue = parseInt(txt);
-            if (newValue > max) {
-                return;
-            }
             newProductsQuantity[id] = newValue;
         }
         setProductsQuantity(newProductsQuantity);
@@ -307,7 +304,7 @@ function UploadSale() {
                                 placeholder="Qntd."
                                 keyboardType="number-pad"
                                 value={productsQuantity[product.id].toString()}
-                                onChangeText={txt => handleChangeQuantity(product.id, txt, product.quantity)}
+                                onChangeText={txt => handleChangeQuantity(product.id, txt)}
                             />
                             <RectButton onPress={() => handleRemoveProduct(product.id)}>
                                 <Feather
@@ -329,7 +326,6 @@ function UploadSale() {
                     return <TO
                         key={productSearched.id}
                         onPress={() => handleAddProduct(productSearched)}
-                        disabled={productSearched.quantity <= 0}
                     >
                         <View style={[styles.sectionProduct, { borderColor: 'lightgray' }]}>
                             <View style={styles.sectionProductInfoContainer}>
@@ -339,11 +335,6 @@ function UploadSale() {
                                 />
                                 <Text style={styles.sectionProductName}>{productSearched.name}</Text>
                             </View>
-                            {productSearched.quantity > 0 ? <Text style={styles.sectionProductQuantity}>
-                                {productSearched.quantity}x
-                            </Text> : <Text style={styles.sectionProductOutOfStock}>
-                                Fora de estoque
-                            </Text>}
                         </View>
                     </TO>
                 })}

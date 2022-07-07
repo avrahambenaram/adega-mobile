@@ -5,7 +5,22 @@ declare interface Product {
     image: string
     purchasePrice: number
     salePrice: number
+    creationTime: number
+    creationDate: string
+    creationSecond: number
+    creationMinute: number
+    creationHour: number
+    creationDay: number
+    creationMonth: number
+    creationYear: number
+}
+declare interface ProductId {
+    id: string
+    name: string
+    image: string
     quantity: number
+    purchasePrice: number
+    salePrice: number
     creationTime: number
     creationDate: string
     creationSecond: number
@@ -48,7 +63,7 @@ declare interface Entrance {
 declare interface EntranceId {
     id: string
     products: Array<ProductEntrance>
-    items: Array<Product>
+    items: Array<ProductId>
     price: Nnmber
     cancelled: boolean
     entranceDate: string
@@ -107,7 +122,7 @@ declare interface SaleId {
     saleDay: number
     saleMonth: number
     saleYear: number
-    items: Array<Product>
+    items: Array<ProductId>
 }
 declare interface Gain {
     id: string

@@ -26,14 +26,12 @@ function UploadProduct() {
         uri: ''
     })
     const [name, setName] = useState<string>('');
-    const [quantity, setQuantity] = useState<number>(0);
     const [purchasePrice, setPurchasePrice] = useState<number>(0);
     const [salePrice, setSalePrice] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
 
     function reset() {
         setName('');
-        setQuantity(0);
         setPurchasePrice(0);
         setSalePrice(0);
         setProductIcon({
@@ -60,15 +58,7 @@ function UploadProduct() {
                 })
             }
         } catch(err) {
-            Alert.alert('Um erro ocorreu', err);
-        }
-    }
-
-    function handleChangeNumberValue(txt: string) {
-        if (txt === '') {
-            setQuantity(0);
-        } else {
-            setQuantity(parseInt(txt));
+            Alert.alert('Um erro ocorreu', `${err}`);
         }
     }
 
@@ -90,9 +80,6 @@ function UploadProduct() {
             if (!name) {
                 Alert.alert(titleAlert, 'Faltando nome');
             }
-            if (!quantity) {
-                Alert.alert(titleAlert, 'Faltando quantidade');
-            }
             if (!purchasePrice) {
                 Alert.alert(titleAlert, 'Faltando preço de venda');
             }
@@ -109,7 +96,6 @@ function UploadProduct() {
                 uri: productIcon.uri
             } as any)
             formData.append('name', name);
-            formData.append('quantity', quantity as any);
             formData.append('purchasePrice', purchasePrice as any);
             formData.append('salePrice', salePrice as any);
 
@@ -122,7 +108,7 @@ function UploadProduct() {
             setLoading(false);
             reset();
         } catch(err) {
-            Alert.alert('Um erro ocorreu', err);
+            Alert.alert('Um erro ocorreu', `${err}`);
         }
     }
 
@@ -161,23 +147,6 @@ function UploadProduct() {
                                 placeholder="Digite o nome"
                                 value={name}
                                 onChangeText={txt => setName(txt)}
-                            />
-                        </View>
-                    </View>
-                    <View style={[styles.sectionItemInputInfoContainer, { width: '30%' }]}>
-                        <Text style={styles.sectionItemInputTitle}>Quantidade</Text>
-                        <View style={styles.sectionItemInputContainer}>
-                            <FontAwesome5
-                                name="sort-numeric-up-alt"
-                                size={18}
-                                color="#007bff"
-                            />
-                            <TextInput
-                                style={styles.sectionItemInput}
-                                placeholder="Qntd."
-                                keyboardType="number-pad"
-                                value={quantity.toString()}
-                                onChangeText={handleChangeNumberValue}
                             />
                         </View>
                     </View>

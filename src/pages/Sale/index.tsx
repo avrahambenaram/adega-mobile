@@ -4,7 +4,7 @@ import { RectButton } from 'react-native-gesture-handler';
 import { useRoute, useNavigation } from '@react-navigation/native';
 
 import Header from '../../components/Header'
-import ProductCard from '../../components/ProductCard';
+import ProductCard from '../../components/ProductCardId';
 
 import styles from './styles';
 

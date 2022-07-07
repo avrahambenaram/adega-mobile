@@ -27,7 +27,6 @@ const initialState: Product = {
     image: '',
     name: '',
     purchasePrice: 0,
-    quantity: 0,
     salePrice: 0
 }
 
@@ -37,12 +36,10 @@ function UploadProduct() {
     const navigation = useNavigation();
 
     const [initialName, setInitialName] = useState<string>('');
-    const [initialQuantity, setInitialQuantity] = useState<number>(0);
     const [initialPurchasePrice, setInitialPurchasePrice] = useState<number>(0);
     const [initialSalePrice, setInitialSalePrice] = useState<number>(0);
 
     const [name, setName] = useState<string>('');
-    const [quantity, setQuantity] = useState<number>(0);
     const [purchasePrice, setPurchasePrice] = useState<number>(0);
     const [salePrice, setSalePrice] = useState<number>(0);
     const [product, setProduct] = useState<Product>(initialState);
@@ -59,8 +56,6 @@ function UploadProduct() {
 
             setInitialName(newProduct.name);
             setName(newProduct.name);
-            setInitialQuantity(newProduct.quantity);
-            setQuantity(newProduct.quantity);
             setInitialPurchasePrice(newProduct.purchasePrice);
             setPurchasePrice(newProduct.purchasePrice);
             setInitialSalePrice(newProduct.salePrice);
@@ -79,14 +74,6 @@ function UploadProduct() {
         }
     }
 
-    function handleChangeNumberValue(txt: string) {
-        if (txt === '') {
-            setQuantity(0);
-        } else {
-            setQuantity(parseInt(txt));
-        }
-    }
-
     async function handleSaveProduct() {
         setLoading(true);
         try {
@@ -95,9 +82,6 @@ function UploadProduct() {
             let finalChange: any = {};
             if (initialName !== name) {
                 finalChange.name = name;
-            }
-            if (initialQuantity !== quantity) {
-                finalChange.quantity = quantity;
             }
             if (initialPurchasePrice !== purchasePrice) {
                 finalChange.purchasePrice = purchasePrice;
@@ -119,9 +103,6 @@ function UploadProduct() {
             return true;
         }
         if (initialName !== name) {
-            return true;
-        }
-        if (initialQuantity !== quantity) {
             return true;
         }
         if (initialPurchasePrice !== purchasePrice) {
@@ -191,23 +172,6 @@ function UploadProduct() {
                                 placeholder="Digite o nome"
                                 value={name}
                                 onChangeText={txt => setName(txt)}
-                            />
-                        </View>
-                    </View>
-                    <View style={[styles.sectionItemInputInfoContainer, { width: '30%' }]}>
-                        <Text style={styles.sectionItemInputTitle}>Quantidade</Text>
-                        <View style={styles.sectionItemInputContainer}>
-                            <FontAwesome5
-                                name="sort-numeric-up-alt"
-                                size={18}
-                                color="#007bff"
-                            />
-                            <TextInput
-                                style={styles.sectionItemInput}
-                                placeholder="Qntd."
-                                keyboardType="number-pad"
-                                value={quantity.toString()}
-                                onChangeText={handleChangeNumberValue}
                             />
                         </View>
                     </View>

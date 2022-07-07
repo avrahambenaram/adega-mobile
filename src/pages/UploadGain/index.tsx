@@ -9,10 +9,6 @@ import Header from '../../components/Header';
 
 import api from '../../services/api';
 
-interface ProductsQuantity {
-    [index: string]: number
-}
-
 function UploadEntrance() {
 
     const [total, setTotal] = useState('');
