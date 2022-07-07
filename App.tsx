@@ -6,6 +6,7 @@ import { useFonts, Nunito_400Regular, Nunito_600SemiBold, Nunito_700Bold } from 
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Provider } from 'react-redux';
 import { io } from 'socket.io-client';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import store from './src/store';
 
@@ -37,12 +38,37 @@ export default function App() {
   }, [fontsLoaded])
 
   useEffect(() => {
+
+    async function load() {
+      try {
+        const awaitingSalesJSON = await AsyncStorage.getItem('awaiting-sales');
+        if (awaitingSalesJSON !== null) {
+          store.dispatch({
+            type: 'set-awaiting-sale',
+            value: JSON.parse(awaitingSalesJSON as any)
+          })
+        } else {
+          await AsyncStorage.setItem('awaiting-sales', JSON.stringify([]));
+        }
+      } catch(err) {
+        console.log(err);
+      }
+    }
+
     socket.on('product-new', (product: Product) => {
       store.dispatch({
         type: 'add-product',
         value: product
       })
       ToastAndroid.show('Novo produto cadastrado', ToastAndroid.LONG);
+    })
+    socket.on('product-change', (product: Product) => {
+      store.dispatch({
+        type: 'change-product',
+        value: product,
+        id: product.id
+      })
+      ToastAndroid.show('Um produto foi alterado', ToastAndroid.LONG);
     })
     socket.on('product-delete', (product: Product) => {
       store.dispatch({
@@ -111,6 +137,7 @@ export default function App() {
       })
       console.log('Pixs', pixs)
     })
+    load();
   }, [])
 
   if (fontsLoaded) {

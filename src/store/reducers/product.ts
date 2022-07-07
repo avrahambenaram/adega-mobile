@@ -4,6 +4,10 @@ function productReducer(state: Array<Product> = [], actions: any) {
         case 'add-product':
             newState.unshift(actions.value);
             return newState;
+        case 'change-product':
+            const index2 = state.findIndex(product => product.id === actions.id);
+            newState[index2] = actions.value;
+            return newState;
         case 'remove-product':
             const index = state.findIndex(product => product.id === actions.id);
             newState.splice(index, 1);
